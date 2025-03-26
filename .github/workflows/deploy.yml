@@ -1,0 +1,29 @@
+name: Deploy Static Website sankaw.com
+
+on:
+  push:
+    branches:
+      - main # or your default branch name
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: / # Root directory where your website files should go
+          protocol: ftp # Since server doesn't support FTPS/FTP over TLS
+          exclude: |
+            **/.git*
+            **/.git*/**
+            README.md
+            LICENSE
+            .github/**
