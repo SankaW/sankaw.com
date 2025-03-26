@@ -1,0 +1,34 @@
+.tableau-responsive-container {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  }
+  
+  .tableauPlaceholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  #resume {
+    background-color: #bd5d38; 
+    color: white; 
+    border-color: #bd5d38;
+  }
+
+  #resume:hover {
+    background-color: #ffffff; 
+    color: #bd5d38; 
+    border-color: #bd5d38;
+  }
+
+.list-item {
+    margin-bottom: 20px;
+  }
+
+.badge-orange {
+    background-color: #db8969; /* Or any specific shade of orange you prefer */
+}

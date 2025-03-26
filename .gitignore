@@ -1,0 +1,7 @@
+stats/
+certifications/*
+!certifications/certifications.js
+resume/*
+!resume/Sanka_weerathunga_resume.pdf
+skills/*
+!skills/technology_tools.js
