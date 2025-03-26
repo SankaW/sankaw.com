@@ -54,6 +54,9 @@ document.addEventListener("DOMContentLoaded", function () {
     spinner.style.display = "inline-block";
 
     try {
+      console.log('Sending request to:', LAMBDA_ENDPOINT);
+      console.log('With data:', formData);
+      
       const response = await fetch(LAMBDA_ENDPOINT, {
         method: "POST",
         mode: "cors",
@@ -64,33 +67,36 @@ document.addEventListener("DOMContentLoaded", function () {
         body: JSON.stringify(formData),
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log('Response data:', data);
 
-      if (response.ok) {
-        // Show success message
-        successMessage.style.display = "block";
-        successMessage.textContent = "Message sent successfully!";
+      // Show success message
+      successMessage.style.display = "block";
+      successMessage.textContent = "Message sent successfully!";
 
-        // Reset form
-        contactForm.reset();
+      // Reset form
+      contactForm.reset();
 
-        // Hide form after 3 seconds
+      // Hide form after 3 seconds
+      setTimeout(() => {
+        contactContainer.classList.remove("show");
+        contactContainer.style.opacity = "0";
         setTimeout(() => {
-          contactContainer.classList.remove("show");
-          contactContainer.style.opacity = "0";
-          setTimeout(() => {
-            contactContainer.style.display = "none";
-            successMessage.style.display = "none";
-          }, 300);
-        }, 3000);
-      } else {
-        throw new Error(data.message || "Failed to send message");
-      }
+          contactContainer.style.display = "none";
+          successMessage.style.display = "none";
+        }, 300);
+      }, 3000);
     } catch (error) {
+      console.error('Error:', error);
       // Show error message
       errorMessage.style.display = "block";
       errorMessage.textContent =
