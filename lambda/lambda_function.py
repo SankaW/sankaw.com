@@ -3,6 +3,7 @@ import smtplib
 import json
 import traceback
 
+
 def lambda_handler(event, context):
     # Add CORS headers
     headers = {
@@ -26,7 +27,8 @@ def lambda_handler(event, context):
 
         # Validate required fields
         required_fields = ["name", "email", "message"]
-        missing_fields = [field for field in required_fields if not body.get(field)]
+        missing_fields = [
+            field for field in required_fields if not body.get(field)]
         if missing_fields:
             return {
                 "statusCode": 400,
@@ -41,10 +43,11 @@ def lambda_handler(event, context):
         email = body.get("email")
         subject = body.get("subject", "No Subject")
         message = body.get("message", "")
+        form_type = body.get("formType", "default").strip().lower()
 
         my_email = os.environ.get("MY_EMAIL")
         app_password = os.environ.get("APP_PASSWORD")
-        to_addrs = os.environ.get("TO_EMAIL", "sdweerathunga5@gmail.com")
+        # to_addrs = os.environ.get("TO_EMAIL", "sdweerathunga5@gmail.com")
 
         if not my_email or not app_password:
             return {
@@ -56,8 +59,20 @@ def lambda_handler(event, context):
                 })
             }
 
+        # Recipient mapping using formType
+        recipient_mapping = {
+            "nimmi": "nimmirashinika@gmail.com",
+            "sanka": "sdweerathunga5@gmail.com",
+            "default": "sdweerathunga5@gmail.com"
+        }
+
+        to_addrs = recipient_mapping.get(
+            form_type, recipient_mapping["default"])
+
+        # Compose email
         email_body = f"You have a new message from {name} ({email}):\n\n{message}"
 
+        # Send email
         with smtplib.SMTP("smtp.gmail.com", 587) as connection:
             connection.starttls()
             connection.login(user=my_email, password=app_password)
@@ -93,7 +108,7 @@ def lambda_handler(event, context):
         # Log the full error for debugging
         print(f"Error: {str(e)}")
         print(f"Traceback: {traceback.format_exc()}")
-        
+
         return {
             "statusCode": 500,
             "headers": headers,

@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
       email: document.getElementById("contact-email").value,
       subject: document.getElementById("contact-subject").value,
       message: document.getElementById("contact-message").value,
+      formType: "sanka",
     };
 
     // Disable submit button and show spinner
@@ -54,30 +55,33 @@ document.addEventListener("DOMContentLoaded", function () {
     spinner.style.display = "inline-block";
 
     try {
-      console.log('Sending request to:', LAMBDA_ENDPOINT);
-      console.log('With data:', formData);
-      
+      console.log("Sending request to:", LAMBDA_ENDPOINT);
+      console.log("With data:", formData);
+
       const response = await fetch(LAMBDA_ENDPOINT, {
         method: "POST",
         mode: "cors",
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify(formData),
       });
 
-      console.log('Response status:', response.status);
-      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+      console.log("Response status:", response.status);
+      console.log(
+        "Response headers:",
+        Object.fromEntries(response.headers.entries())
+      );
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Error response:', errorText);
+        console.error("Error response:", errorText);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log('Response data:', data);
+      console.log("Response data:", data);
 
       // Show success message
       successMessage.style.display = "block";
@@ -96,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 300);
       }, 3000);
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
       // Show error message
       errorMessage.style.display = "block";
       errorMessage.textContent =
